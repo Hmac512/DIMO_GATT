@@ -1,7 +1,7 @@
 import array
 import dbus.exceptions
 
-from ble import Descriptor
+from gatt.ble import Descriptor
 import os
 # from web3 import Web3
 

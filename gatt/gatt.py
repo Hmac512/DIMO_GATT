@@ -15,7 +15,7 @@ import dbus.mainloop.glib
 import dbus.service
 import socket
 
-from ble import (
+from gatt.ble import (
     Advertisement,
     Characteristic,
     Service,
@@ -25,10 +25,10 @@ from ble import (
 )
 import datetime
 import json
-from utils import *
+from gatt.utils import *
 # from eth import ETH_ACCOUNT, sign_message
 import subprocess
-from agent import Agent
+from gatt.agent import Agent
 # Mainloop
 MainLoop = None
 try:

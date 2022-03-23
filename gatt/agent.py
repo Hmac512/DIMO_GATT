@@ -14,7 +14,7 @@ try:
     from gi.repository import GObject
 except ImportError:
     import gobject as GObject
-import bluezutils
+from gatt import bluezutils
 
 BUS_NAME = 'org.bluez'
 AGENT_INTERFACE = 'org.bluez.Agent1'
