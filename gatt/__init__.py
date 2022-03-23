@@ -1,3 +1,3 @@
 # coding=utf-8
 
-"""Filebeat Scrubber."""
+"""DIMO AutoPI BLE GATT"""
