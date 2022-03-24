@@ -122,6 +122,13 @@ def dev_disconnect(path):
     dev.Disconnect()
 
 
+def dev_connect(path):
+    dev = dbus.Interface(bus.get_object("org.bluez", path),
+                         "org.bluez.Device1")
+
+    dev.Connect()
+
+
 class SignedToken(Characteristic):
     uuid = 'ce878653-8c44-4326-84e5-3be6c0fa341f'
     description = b'signed token'
@@ -281,8 +288,15 @@ def main():
     agent_manager.RegisterAgent(agent_path, capability)
     agent_manager.RequestDefaultAgent(agent_path)
     logger.info("Agent registered")
+    logger.info("Attempting to connect to trusted devices")
 
-    listDevices(logger)
+    try:
+        device_paths = listDevices(logger)
+        for device_path in device_paths:
+            logger.info("Connecting to %s" % device_path)
+            dev_connect(device_path)
+    except Exception as e:
+        logger.error(traceback.format_exc())
 
     app = Application(bus)
     app.add_service(AutoPiS1Service(bus, 0))

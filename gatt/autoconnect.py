@@ -6,7 +6,7 @@ import dbus
 
 
 def listDevices(logger):
-
+    paths = []
     bus = dbus.SystemBus()
 
     manager = dbus.Interface(bus.get_object("org.bluez", "/"),
@@ -42,6 +42,7 @@ def listDevices(logger):
             continue
 
         logger.info("[ " + path + " ]")
+        paths.append(path)
 
         properties = interfaces["org.bluez.Adapter1"]
         for key in properties.keys():
@@ -77,3 +78,4 @@ def listDevices(logger):
                     logger.info("        %s = %s" % (key, value))
 
         logger.info("")
+    return paths
