@@ -41,21 +41,21 @@ def listDevices(logger):
         if "org.bluez.Adapter1" not in interfaces.keys():
             continue
 
-        logger("[ " + path + " ]")
+        logger.info("[ " + path + " ]")
 
         properties = interfaces["org.bluez.Adapter1"]
         for key in properties.keys():
             value = properties[key]
             if (key == "UUIDs"):
                 list = extract_uuids(value)
-                logger("    %s = %s" % (key, list))
+                logger.info("    %s = %s" % (key, list))
             else:
-                logger("    %s = %s" % (key, value))
+                logger.info("    %s = %s" % (key, value))
 
         device_list = [d for d in all_devices if d.startswith(path + "/")]
 
         for dev_path in device_list:
-            logger("    [ " + dev_path + " ]")
+            logger.info("    [ " + dev_path + " ]")
 
             dev = objects[dev_path]
             properties = dev["org.bluez.Device1"]
@@ -64,16 +64,16 @@ def listDevices(logger):
                 value = properties[key]
                 if (key == "UUIDs"):
                     list = extract_uuids(value)
-                    logger("        %s = %s" % (key, list))
+                    logger.info("        %s = %s" % (key, list))
                 elif (key == "Class"):
-                    logger("        %s = 0x%06x" % (key, value))
+                    logger.info("        %s = 0x%06x" % (key, value))
                 elif (key == "Vendor"):
-                    logger("        %s = 0x%04x" % (key, value))
+                    logger.info("        %s = 0x%04x" % (key, value))
                 elif (key == "Product"):
-                    logger("        %s = 0x%04x" % (key, value))
+                    logger.info("        %s = 0x%04x" % (key, value))
                 elif (key == "Version"):
-                    logger("        %s = 0x%04x" % (key, value))
+                    logger.info("        %s = 0x%04x" % (key, value))
                 else:
-                    logger("        %s = %s" % (key, value))
+                    logger.info("        %s = %s" % (key, value))
 
-        logger("")
+        logger.info("")
