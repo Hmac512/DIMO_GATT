@@ -305,10 +305,10 @@ def main():
         device_manager = dbus.Interface(bus.get_object("org.bluez", "/"),
                                         "org.freedesktop.DBus.ObjectManager")
         all_objects = device_manager.GetManagedObjects()
-        all_devices = (str(path) for path, interfaces in all_objects.iteritems() if
+        all_devices = (str(path) for path, interfaces in all_objects.items() if
                        "org.bluez.Device1" in interfaces.keys())
 
-        for path, interfaces in all_objects.iteritems():
+        for path, interfaces in all_objects.items():
             if "org.bluez.Adapter1" not in interfaces.keys():
                 continue
 
