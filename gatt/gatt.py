@@ -253,10 +253,10 @@ def main():
     agent_path = "/dimo/agent"
     agent = Agent(bus, agent_path)
 
-    manager = dbus.Interface(obj, "org.bluez.AgentManager1")
-    manager.RegisterAgent(agent_path, capability)
-    manager.RequestDefaultAgent(agent_path)
-    logger.info("Agent registered")
+    # manager = dbus.Interface(obj, "org.bluez.AgentManager1")
+    # manager.RegisterAgent(agent_path, capability)
+    # manager.RequestDefaultAgent(agent_path)
+    # logger.info("Agent registered")
 
     app = Application(bus)
     app.add_service(AutoPiS1Service(bus, 0))

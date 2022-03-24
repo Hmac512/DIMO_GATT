@@ -7,7 +7,7 @@ with open("README.md", "r") as readme_file:
 
 setuptools.setup(
     name="dimo-gatt",
-    version="0.0.3a",
+    version="0.0.4a",
     author="Hmac512",
     description="Test dimo gatt",
     long_description=long_description,
