@@ -240,6 +240,7 @@ def main():
 
     # powered property on the controller to on
     adapter_props.Set("org.bluez.Adapter1", "Powered", dbus.Boolean(1))
+    adapter_props.Set("org.bluez.Adapter1", "Pairable", dbus.Boolean(1))
 
     # Get manager objs
     service_manager = dbus.Interface(adapter_obj, GATT_MANAGER_IFACE)
@@ -253,10 +254,10 @@ def main():
     agent_path = "/dimo/agent"
     agent = Agent(bus, agent_path)
 
-    # manager = dbus.Interface(obj, "org.bluez.AgentManager1")
-    # manager.RegisterAgent(agent_path, capability)
-    # manager.RequestDefaultAgent(agent_path)
-    # logger.info("Agent registered")
+    manager = dbus.Interface(obj, "org.bluez.AgentManager1")
+    manager.RegisterAgent(agent_path, capability)
+    manager.RequestDefaultAgent(agent_path)
+    logger.info("Agent registered")
 
     app = Application(bus)
     app.add_service(AutoPiS1Service(bus, 0))
