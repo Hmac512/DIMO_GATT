@@ -29,6 +29,7 @@ from gatt.utils import *
 # from eth import ETH_ACCOUNT, sign_message
 import subprocess
 from gatt.agent import Agent
+from gatt.autoconnect import listDevices
 # Mainloop
 MainLoop = None
 try:
@@ -281,6 +282,8 @@ def main():
     agent_manager.RequestDefaultAgent(agent_path)
     logger.info("Agent registered")
 
+    listDevices()
+
     app = Application(bus)
     app.add_service(AutoPiS1Service(bus, 0))
 
@@ -301,55 +304,6 @@ def main():
         reply_handler=register_app_cb,
         error_handler=register_app_error_cb,
     )
-    try:
-        device_manager = dbus.Interface(bus.get_object("org.bluez", "/"),
-                                        "org.freedesktop.DBus.ObjectManager")
-        all_objects = device_manager.GetManagedObjects()
-        all_devices = (str(path) for path, interfaces in all_objects.items() if
-                       "org.bluez.Device1" in interfaces.keys())
-
-        for path, interfaces in all_objects.items():
-            if "org.bluez.Adapter1" not in interfaces.keys():
-                continue
-
-            print("[ " + path + " ]")
-
-            properties = interfaces["org.bluez.Adapter1"]
-            for key in properties.keys():
-                value = properties[key]
-                if (key == "UUIDs"):
-                    list = extract_uuids(value)
-                    print("    %s = %s" % (key, list))
-                else:
-                    print("    %s = %s" % (key, value))
-
-            device_list = [d for d in all_devices if d.startswith(path + "/")]
-
-            for dev_path in device_list:
-                print("    [ " + dev_path + " ]")
-
-                dev = all_objects[dev_path]
-                properties = dev["org.bluez.Device1"]
-
-                for key in properties.keys():
-                    value = properties[key]
-                    if (key == "UUIDs"):
-                        list = extract_uuids(value)
-                        print("        %s = %s" % (key, list))
-                    elif (key == "Class"):
-                        print("        %s = 0x%06x" % (key, value))
-                    elif (key == "Vendor"):
-                        print("        %s = 0x%04x" % (key, value))
-                    elif (key == "Product"):
-                        print("        %s = 0x%04x" % (key, value))
-                    elif (key == "Version"):
-                        print("        %s = 0x%04x" % (key, value))
-                    else:
-                        print("        %s = %s" % (key, value))
-
-            print("")
-    except Exception as e:
-        traceback.print_exc()
 
     mainloop.run()
 
