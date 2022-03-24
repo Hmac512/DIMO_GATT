@@ -210,6 +210,28 @@ class AutoPiAdvertisement(Advertisement):
         self.add_service_uuid(AutoPiS1Service.SVC_UUID)
 
 
+def extract_objects(object_list):
+    list = ""
+    for object in object_list:
+        val = str(object)
+        list = list + val[val.rfind("/") + 1:] + " "
+    return list
+
+
+def extract_uuids(uuid_list):
+    list = ""
+    for uuid in uuid_list:
+        if (uuid.endswith("-0000-1000-8000-00805f9b34fb")):
+            if (uuid.startswith("0000")):
+                val = "0x" + uuid[4:8]
+            else:
+                val = "0x" + uuid[0:8]
+        else:
+            val = str(uuid)
+        list = list + val + " "
+    return list
+
+
 def main():
     global mainloop
     global bus
@@ -238,7 +260,7 @@ def main():
     adapter_props = dbus.Interface(
         adapter_obj, "org.freedesktop.DBus.Properties")
 
-    # powered property on the controller to on
+    # powered and pairable property on the controller to on
     adapter_props.Set("org.bluez.Adapter1", "Powered", dbus.Boolean(1))
     adapter_props.Set("org.bluez.Adapter1", "Pairable", dbus.Boolean(1))
 
@@ -254,9 +276,9 @@ def main():
     agent_path = "/dimo/agent"
     agent = Agent(bus, agent_path)
 
-    manager = dbus.Interface(obj, "org.bluez.AgentManager1")
-    manager.RegisterAgent(agent_path, capability)
-    manager.RequestDefaultAgent(agent_path)
+    agent_manager = dbus.Interface(obj, "org.bluez.AgentManager1")
+    agent_manager.RegisterAgent(agent_path, capability)
+    agent_manager.RequestDefaultAgent(agent_path)
     logger.info("Agent registered")
 
     app = Application(bus)
@@ -279,6 +301,53 @@ def main():
         reply_handler=register_app_cb,
         error_handler=register_app_error_cb,
     )
+
+    device_manager = dbus.Interface(bus.get_object("org.bluez", "/"),
+                                    "org.freedesktop.DBus.ObjectManager")
+    all_objects = device_manager.GetManagedObjects()
+    all_devices = (str(path) for path, interfaces in all_objects.iteritems() if
+                   "org.bluez.Device1" in interfaces.keys())
+
+    for path, interfaces in all_objects.iteritems():
+        if "org.bluez.Adapter1" not in interfaces.keys():
+            continue
+
+        print("[ " + path + " ]")
+
+        properties = interfaces["org.bluez.Adapter1"]
+        for key in properties.keys():
+            value = properties[key]
+            if (key == "UUIDs"):
+                list = extract_uuids(value)
+                print("    %s = %s" % (key, list))
+            else:
+                print("    %s = %s" % (key, value))
+
+        device_list = [d for d in all_devices if d.startswith(path + "/")]
+
+        for dev_path in device_list:
+            print("    [ " + dev_path + " ]")
+
+            dev = all_objects[dev_path]
+            properties = dev["org.bluez.Device1"]
+
+            for key in properties.keys():
+                value = properties[key]
+                if (key == "UUIDs"):
+                    list = extract_uuids(value)
+                    print("        %s = %s" % (key, list))
+                elif (key == "Class"):
+                    print("        %s = 0x%06x" % (key, value))
+                elif (key == "Vendor"):
+                    print("        %s = 0x%04x" % (key, value))
+                elif (key == "Product"):
+                    print("        %s = 0x%04x" % (key, value))
+                elif (key == "Version"):
+                    print("        %s = 0x%04x" % (key, value))
+                else:
+                    print("        %s = %s" % (key, value))
+
+        print("")
 
     mainloop.run()
 
