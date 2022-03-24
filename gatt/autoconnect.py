@@ -5,7 +5,7 @@
 import dbus
 
 
-def listDevices():
+def listDevices(logger):
 
     bus = dbus.SystemBus()
 
@@ -41,21 +41,21 @@ def listDevices():
         if "org.bluez.Adapter1" not in interfaces.keys():
             continue
 
-        print("[ " + path + " ]")
+        logger("[ " + path + " ]")
 
         properties = interfaces["org.bluez.Adapter1"]
         for key in properties.keys():
             value = properties[key]
             if (key == "UUIDs"):
                 list = extract_uuids(value)
-                print("    %s = %s" % (key, list))
+                logger("    %s = %s" % (key, list))
             else:
-                print("    %s = %s" % (key, value))
+                logger("    %s = %s" % (key, value))
 
         device_list = [d for d in all_devices if d.startswith(path + "/")]
 
         for dev_path in device_list:
-            print("    [ " + dev_path + " ]")
+            logger("    [ " + dev_path + " ]")
 
             dev = objects[dev_path]
             properties = dev["org.bluez.Device1"]
@@ -64,16 +64,16 @@ def listDevices():
                 value = properties[key]
                 if (key == "UUIDs"):
                     list = extract_uuids(value)
-                    print("        %s = %s" % (key, list))
+                    logger("        %s = %s" % (key, list))
                 elif (key == "Class"):
-                    print("        %s = 0x%06x" % (key, value))
+                    logger("        %s = 0x%06x" % (key, value))
                 elif (key == "Vendor"):
-                    print("        %s = 0x%04x" % (key, value))
+                    logger("        %s = 0x%04x" % (key, value))
                 elif (key == "Product"):
-                    print("        %s = 0x%04x" % (key, value))
+                    logger("        %s = 0x%04x" % (key, value))
                 elif (key == "Version"):
-                    print("        %s = 0x%04x" % (key, value))
+                    logger("        %s = 0x%04x" % (key, value))
                 else:
-                    print("        %s = %s" % (key, value))
+                    logger("        %s = %s" % (key, value))
 
-        print("")
+        logger("")

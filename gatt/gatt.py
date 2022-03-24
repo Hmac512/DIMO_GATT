@@ -282,7 +282,7 @@ def main():
     agent_manager.RequestDefaultAgent(agent_path)
     logger.info("Agent registered")
 
-    listDevices()
+    listDevices(logger)
 
     app = Application(bus)
     app.add_service(AutoPiS1Service(bus, 0))
