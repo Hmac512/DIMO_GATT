@@ -291,7 +291,8 @@ def main():
     logger.info("Attempting to connect to trusted devices")
 
     try:
-        device_paths = listDevices(logger)
+        # device_paths = listDevices(logger)
+        device_paths = ["/org/bluez/hci0/dev_F4_65_A6_D0_17_E0"]
         for device_path in device_paths:
             logger.info("Connecting to %s" % device_path)
             dev_connect(device_path)

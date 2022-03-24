@@ -42,7 +42,8 @@ def listDevices(logger):
             continue
 
         logger.info("[ " + path + " ]")
-        paths.append(path)
+        logger.info(path)
+        paths.append(path.strip())
 
         properties = interfaces["org.bluez.Adapter1"]
         for key in properties.keys():
