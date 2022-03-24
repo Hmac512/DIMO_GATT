@@ -153,8 +153,8 @@ class SignedToken(Characteristic):
         return str.encode(signedToken)
 
     def WriteValue(self, value, options):
-        print(options)
-        print(options["device"])
+        logger.info(options)
+        logger.info(options["device"])
         dev_disconnect(options["device"])
         logger.info("Test Write: " + repr(value))
         cmd = bytes(value).decode("utf-8")
