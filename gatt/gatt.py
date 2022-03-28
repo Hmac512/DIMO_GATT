@@ -290,14 +290,14 @@ def main():
     logger.info("Agent registered")
     logger.info("Attempting to connect to trusted devices")
 
-    try:
-        # device_paths = listDevices(logger)
-        device_paths = ["/org/bluez/hci0/dev_F4_65_A6_D0_17_E0"]
-        for device_path in device_paths:
-            logger.info("Connecting to %s" % device_path)
-            dev_connect(device_path)
-    except Exception as e:
-        logger.error(traceback.format_exc())
+    # try:
+    #     # device_paths = listDevices(logger)
+    #     device_paths = ["/org/bluez/hci0/dev_F4_65_A6_D0_17_E0"]
+    #     for device_path in device_paths:
+    #         logger.info("Connecting to %s" % device_path)
+    #         dev_connect(device_path)
+    # except Exception as e:
+    #     logger.error(traceback.format_exc())
 
     app = Application(bus)
     app.add_service(AutoPiS1Service(bus, 0))
