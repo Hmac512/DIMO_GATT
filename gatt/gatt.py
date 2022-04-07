@@ -271,7 +271,7 @@ def main():
     # powered and pairable property on the controller to on
     adapter_props.Set("org.bluez.Adapter1", "Powered", dbus.Boolean(1))
     adapter_props.Set("org.bluez.Adapter1", "Pairable", dbus.Boolean(0))
-    adapter_props.Set("org.bluez.Adapter1", "Discoverable", dbus.Boolean(0))
+    adapter_props.Set("org.bluez.Adapter1", "Discoverable",dbus.Boolean(1))
 
     # Get manager objs
     service_manager = dbus.Interface(adapter_obj, GATT_MANAGER_IFACE)
