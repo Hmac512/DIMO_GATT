@@ -6,6 +6,8 @@ import dbus.service
 import logging
 import sys
 
+from gatt.utils import InvalidArgsException, NotSupportedException
+
 DBUS_OM_IFACE = "org.freedesktop.DBus.ObjectManager"
 DBUS_PROP_IFACE = "org.freedesktop.DBus.Properties"
 
