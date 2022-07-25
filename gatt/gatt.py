@@ -25,8 +25,8 @@ from gatt.ble import (
 )
 import datetime
 import json
+from gatt.eth import sign_message
 from gatt.utils import *
-# from eth import ETH_ACCOUNT, sign_message
 import subprocess
 from gatt.agent import Agent
 from gatt.autoconnect import listDevices
@@ -146,8 +146,8 @@ class SignedToken(Characteristic):
     def ReadValue(self, options):
 
         token = {"timestamp": datetime.datetime.now().isoformat()}
-        # signature = sign_message(dump_json(token))
-        signature = dump_json(token)
+        signature = sign_message(dump_json(token))
+        #signature = dump_json(token)
         signedToken = dump_json({"token": token, "signature": signature})
         logger.info(signedToken)
         return str.encode(signedToken)
@@ -271,7 +271,7 @@ def main():
     # powered and pairable property on the controller to on
     adapter_props.Set("org.bluez.Adapter1", "Powered", dbus.Boolean(1))
     adapter_props.Set("org.bluez.Adapter1", "Pairable", dbus.Boolean(0))
-    adapter_props.Set("org.bluez.Adapter1", "Discoverable",dbus.Boolean(1))
+    adapter_props.Set("org.bluez.Adapter1", "Discoverable", dbus.Boolean(1))
 
     # Get manager objs
     service_manager = dbus.Interface(adapter_obj, GATT_MANAGER_IFACE)
